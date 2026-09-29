@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Test ufficiale di ammissione</title>
+<style>
+  :root{
+    --bg:#f4efe6; --card:#fffdf8; --ink:#241f1a; --muted:#6b6259;
+    --line:#ddd2c0; --accent:#7a1f1f; --accent-ink:#fff; --brass:#b08a3e;
+    --ok:#2f5d3a; --sel:#f6e8d0;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#17130f; --card:#221c16; --ink:#f1e9dc; --muted:#a99d8d;
+      --line:#3a3026; --accent:#c0392b; --accent-ink:#fff; --brass:#d0a955;
+      --sel:#3a2c1a;
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.55 Georgia,"Times New Roman",serif;
+  }
+  main{max-width:640px; margin:0 auto; padding:24px 16px 72px}
+  header{text-align:center; padding:8px 0 20px; border-bottom:3px double var(--brass); margin-bottom:22px}
+  .crest{font:700 12px/1 system-ui,sans-serif; letter-spacing:.22em; text-transform:uppercase; color:var(--brass)}
+  h1{font-size:28px; line-height:1.15; margin:.5em 0 .2em; letter-spacing:.02em; text-transform:uppercase}
+  .family{color:var(--muted); font-style:italic; margin:0}
+  .intro p{margin:0 0 .9em}
+  .intro .strong{font-weight:700}
+  .intro .fine{font-style:italic; color:var(--muted)}
+  .progress{
+    position:sticky; top:0; z-index:5; background:var(--bg);
+    padding:10px 0 8px; margin:18px 0 6px;
+    font:600 13px/1 system-ui,sans-serif; color:var(--muted);
+  }
+  .bar{height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:8px}
+  .bar > i{display:block; height:100%; width:0; background:var(--brass); transition:width .3s}
+  fieldset{
+    border:1px solid var(--line); background:var(--card); border-radius:14px;
+    padding:16px 14px 12px; margin:0 0 16px; min-width:0;
+  }
+  legend{padding:0 6px; font:700 12px/1 system-ui,sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brass)}
+  .q{font-weight:700; margin:2px 0 12px}
+  .opt{
+    display:flex; gap:12px; align-items:flex-start;
+    border:1.5px solid var(--line); border-radius:10px;
+    padding:12px; margin:0 0 8px; cursor:pointer;
+    font-size:16px; line-height:1.45; -webkit-tap-highlight-color:transparent;
+  }
+  .opt:has(input:checked){border-color:var(--accent); background:var(--sel)}
+  .opt input{margin:3px 0 0; accent-color:var(--accent); width:18px; height:18px; flex:none}
+  .opt b{font-family:system-ui,sans-serif; color:var(--accent); flex:none; width:1.1em}
+  .note{white-space:pre-line; margin:10px 2px 2px; font-size:14.5px; font-style:italic; color:var(--muted); border-left:3px solid var(--brass); padding-left:10px}
+  .final{border:2px solid var(--accent)}
+  .final legend{color:var(--accent)}
+  .final .q{font-size:20px}
+  .final p{margin:.4em 0}
+  .final .solo{margin:.2em 0; font-weight:700}
+  .final .light{color:var(--muted); font-style:italic}
+  .cta{text-align:center; margin-top:24px}
+  button.go{
+    width:100%; padding:16px; border:0; border-radius:12px;
+    font:700 17px/1.2 system-ui,sans-serif; letter-spacing:.03em;
+    background:var(--accent); color:var(--accent-ink); cursor:pointer;
+    transition:opacity .2s, transform .1s;
+  }
+  button.go:active:not(:disabled){transform:scale(.98)}
+  button.go:disabled{opacity:.35; cursor:not-allowed}
+  .hint{font:14px/1.4 system-ui,sans-serif; color:var(--muted); margin:10px 0 0; min-height:1.4em}
+
+  #deliberating{display:none; text-align:center; padding:36px 8px; color:var(--muted); font-style:italic}
+  .spin{width:34px; height:34px; margin:0 auto 14px; border:4px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:r 1s linear infinite}
+  @keyframes r{to{transform:rotate(360deg)}}
+
+  #result{display:none; margin-top:26px; scroll-margin-top:16px}
+  .verdict{
+    border:3px solid var(--accent); border-radius:16px; background:var(--card);
+    padding:22px 16px 20px; text-align:center; position:relative; overflow:hidden;
+  }
+  .stamp{
+    display:inline-block; font:800 22px/1 system-ui,sans-serif; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); border:4px solid var(--accent);
+    padding:10px 16px; border-radius:8px; transform:rotate(-6deg); margin:4px 0 16px;
+    animation:stamp .5s cubic-bezier(.2,1.6,.4,1) both;
+  }
+  @keyframes stamp{from{transform:rotate(-6deg) scale(2.6); opacity:0} to{transform:rotate(-6deg) scale(1); opacity:1}}
+  .verdict p.main{font-size:18px; font-weight:700; margin:0}
+  .profile{margin-top:22px; text-align:left}
+  .profile h2{font:700 13px/1 system-ui,sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); margin:0 0 6px}
+  .profile .sub{font-style:italic; color:var(--muted); margin:0 0 12px; font-size:15px}
+  .profile ul{list-style:none; margin:0; padding:0}
+  .profile li{padding:10px 0; border-top:1px dashed var(--line); font-size:16px}
+  .profile li:first-child{border-top:0}
+  .profile li::before{content:"\2022"; color:var(--accent); font-weight:700; margin-right:8px}
+  .sig{margin-top:18px; text-align:center; font-size:14px; font-style:italic; color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){.spin,.stamp{animation:none}.bar>i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="crest">Cancelli familiari</div>
+    <h1>Test ufficiale di ammissione</h1>
+    <p class="family">Famiglia Mazzotti – Mazza – Capecchi</p>
+  </header>
+
+  <section class="intro">
+    <p class="strong">Ciao Daniele e benvenuto ai cancelli della famiglia Mazzotti – Mazza – Capecchi.</p>
+    <p>Prima di consentirti l’accesso definitivo, il regolamento familiare prevede un breve test d’ingresso volto a verificare affidabilità, prontezza di riflessi, capacità di sopravvivenza e, soprattutto, idoneità alla frequentazione di Beatrice.</p>
+    <p>Ti chiediamo di rispondere con sincerità.<br><em>Non troppa.</em></p>
+    <p>Le risposte verranno valutate da un’apposita commissione composta da persone assolutamente imparziali che, casualmente, sono tutte parenti di Beatrice.</p>
+    <p>In caso di esito positivo, i cancelli si apriranno.<br>In caso di esito negativo… Beatrice verrà informata che ci abbiamo provato.</p>
+    <p class="fine">Buon test, Daniele. E ricorda: non esistono risposte sbagliate.<br>Esistono risposte che ci piacciono e risposte che verranno ricordate per sempre.</p>
+  </section>
+
+  <div class="progress" aria-live="polite">
+    <span id="count">Domande completate: 0 / 12</span>
+    <div class="bar"><i id="fill"></i></div>
+  </div>
+
+  <form id="quiz" onsubmit="return false"></form>
+
+  <fieldset class="final">
+    <legend>Domanda finale</legend>
+    <p class="q">13. Perché proprio Beatrice?</p>
+    <p class="light">Questa volta non ci sono risposte multiple.</p>
+    <p>Se avrai superato le prove precedenti, i cancelli della famiglia Mazzotti – Mazza – Capecchi si apriranno e avrai il piacere di rispondere alla domanda direttamente davanti alla commissione.</p>
+    <p class="solo">Guardandoci negli occhi.</p>
+    <p class="solo">Tutti.</p>
+    <p class="solo">Contemporaneamente.</p>
+    <p class="light">Nessuna pressione.</p>
+  </fieldset>
+
+  <div class="cta">
+    <button class="go" id="go" disabled>Scopri l’esito del test</button>
+    <p class="hint" id="hint">Rispondi a tutte le 12 domande per attivare il pulsante.</p>
+  </div>
+
+  <div id="deliberating" role="status">
+    <div class="spin"></div>
+    La commissione si sta ritirando in camera di consiglio…
+  </div>
+
+  <section id="result" aria-live="polite">
+    <div class="verdict">
+      <div class="stamp">Non idoneo</div>
+      <p class="main">In base al risultato del test, NON hai raggiunto un punteggio sufficiente. Il tuo profilo psicofisico non ti rende idoneo a frequentare Beatrice, pertanto sei invitato a depositare sul pavimento il tuo portafogli, un paio di scatole di caffè e lasciare immediatamente questa casa.</p>
+
+      <div class="profile">
+        <h2>Referto psicologico della commissione</h2>
+        <p class="sub">Valutazione redatta a maggioranza assoluta (e assolutamente parentale).</p>
+        <ul>
+          <li>Sei indiscutibilmente disturbato da raptus notturni, con picchi di intensità in prossimità dei vocali di Beatrice superiori ai sette minuti.</li>
+          <li>Manifesti una spiccata tendenza alla morte apparente da opossum ogni volta che una discussione familiare supera le tre persone.</li>
+          <li>Soffri di mendacità gastronomica cronica, con il vaso decorativo come complice abituale.</li>
+          <li>Risulti affetto da una dipendenza patologica da prese di corrente e da Clash Royale, con crisi di astinenza nei negozi.</li>
+          <li>Presenti una sindrome acuta da “Fai come vuoi”: la commissione la considera insanabile, essendo il 40% del test.</li>
+          <li>Hai un rapporto conflittuale con le istruzioni IKEA: le sette viti avanzate verranno trattenute come prova a tuo carico.</li>
+          <li>Manifesti un’emotività fuori scala davanti a maschere da mostro, che ti porta a comporre il 112 senza reale necessità.</li>
+          <li>Hai un’esposizione al rischio di graffi alla carrozzeria che la commissione definisce “statisticamente significativa”, in particolare dopo un caffè con Gea. Naturalmente non esistono prove.</li>
+          <li>La tua capacità di sopravvivere a una pizza “mozzarella e caccole” è stata giudicata sospettamente entusiasta.</li>
+        </ul>
+        <p class="sub" style="margin-top:14px">Prognosi: riservata. Ricorso: non ammesso. Il verdetto è inappellabile e la commissione non risponde ai messaggi.</p>
+      </div>
+    </div>
+    <p class="sig">La Commissione – Famiglia Mazzotti – Mazza – Capecchi</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  var Q = [
+    {t:"Beatrice ti manda un vocale di 7 minuti e 43 secondi. Tu:",
+     o:["Lo ascolti tutto. Due volte. Prendendo eventualmente appunti.",
+        "Lo ascolti a velocità 2x confidando nelle tue capacità cognitive, ma sbadigli rumorosamente",
+        "Dopo 38 secondi rispondi: «Hai ragione amore», sperando che fosse una lamentela e non una domanda."]},
+    {t:"È il 14 febbraio. Ti accorgi che è San Valentino… il 14 febbraio. Tu:",
+     o:["Confessi l’errore e organizzi qualcosa di carino all’ultimo momento.",
+        "Cerchi disperatamente online “regalo San Valentino consegna entro 40 minuti”.",
+        "Sostieni con grande convinzione che San Valentino sia una festa commerciale da cui ti dissoci per obiezione di coscienza e che tu l’amore lo dimostri 365 giorni all’anno."],
+     n:"La commissione segnala che la risposta C richiede notevoli capacità interpretative."},
+    {t:"Beatrice compra un mobile IKEA e ti chiede di montarlo. Le istruzioni:",
+     o:["Le leggi attentamente prima di iniziare.",
+        "Le cerchi quando, alla fine, avanzano sette viti, una tavoletta e qualcosa che sembra strutturalmente importante.",
+        "Quali istruzioni?!"]},
+    {t:"Beatrice ha litigato con un’amica. Dopo aver ascoltato la storia capisci con assoluta certezza che Beatrice ha torto marcio. Tu:",
+     o:["Ti schieri comunque dalla sua parte. La verità verrà affrontata eventualmente in un secondo momento.",
+        "Le dici, con estrema delicatezza, che forse potrebbe avere una piccolissima, quasi impercettibile percentuale di torto. Tipo il 98%.",
+        "Rimani immobile, smetti di respirare e ti fingi morto come un opossum finché l’argomento non cambia."]},
+    {t:"Beatrice entra in un negozio dicendo: «Guardo solo». Tu:",
+     o:["Le credi.",
+        "Ti siedi e aspetti giocando a Clash Royale.",
+        "Cerchi direttamente una presa per caricare il telefono."]},
+    {t:"Il babbo di Beatrice, detto il Babbotti, ha preparato con orgoglio lingua di manzo, trippa al pomodoro e fegatini di pollo. A te non piace assolutamente niente.",
+     o:["Dici la verità con garbo, consapevole che potrebbe essere l’ultima volta che vieni invitato.",
+        "Elogi aspetti collaterali: «Che profumo!», «Bellissima tavola!», «Questo pane è eccezionale».",
+        "Menti spudoratamente: «BUONISSIMO!», chiedi il bis e trascorri il resto della cena cercando discretamente un vaso dove nasconderlo."]},
+    {t:"Ti capita inaspettatamente un giorno di ferie. Beatrice invece lavora. Tu:",
+     o:["La raggiungi in pausa pranzo perché ormai hai sviluppato una leggera dipendenza affettiva.",
+        "Organizzi qualcosa con gli amici e proponi a Beatrice di raggiungervi quando può.",
+        "Spegni il telefono, scompari per nove ore e alle 19.30 scrivi: «Scusa, non avevo visto»."],
+     n:"La commissione desidera soffermarsi particolarmente sulla tua eventuale risposta C."},
+    {t:"Arrivi per la prima volta a casa di Beatrice. Il Babbotti apre la porta indossando un’improbabile maschera da mostro. Tu:",
+     o:["Chiedi scusa, dici di aver sbagliato campanello e torni lentamente verso la macchina.",
+        "Gli stringi la mano facendo finta che sia tutto perfettamente normale, mentre rivaluti mentalmente alcune scelte della tua vita.",
+        "Chiami il 112 e segnali una situazione sospetta."]},
+    {t:"Durante un pranzo di famiglia senti iniziare una discussione che coinvolge contemporaneamente cinque parenti, tre versioni diverse dello stesso fatto e un episodio accaduto nel 2007. Tu:",
+     o:["Cerchi di capire chi ha ragione.",
+        "Dopo dieci minuti capisci che è impossibile e continui a mangiare.",
+        "Prendi posizione."],
+     n:"La risposta C comporta l’immediata bocciatura per manifesta inesperienza."},
+    {t:"Beatrice ti dice: «Fai come vuoi». Tu:",
+     o:["Faccio come voglio.",
+        "Le chiedo cosa preferirebbe veramente.",
+        "Capisco immediatamente che NON devo fare come voglio."],
+     n:"Questa domanda vale il 40% dell’intero test."},
+    {t:"Sei invitato in pizzeria dalla famiglia di Beatrice, il cameriere si sbaglia e ti porta una pizza “mozzarella e caccole”:",
+     o:["Vomiti nel piatto.",
+        "Chiedi timidamente al cameriere l’olio piccante.",
+        "Esclami “WOW, che culo, la mia preferita!!!”"]},
+    {t:"Gea, sorella maggiore di Beatrice e notoriamente solo “leggermente” protettiva, ti dice: «Un giorno prendiamoci un caffè noi due, così ci conosciamo meglio.» Tu:",
+     o:["Pensi: «Che carina, vuole fare amicizia».",
+        "Accetti, ma prima controlli di avere l’assicurazione per atti vandalici dell’auto in regola.",
+        "Ti presenti con documento d’identità, curriculum, tre referenze e una dichiarazione firmata in cui ti impegni formalmente a non far soffrire Beatrice."],
+     n:"Piccola informazione utile: secondo una leggenda ormai consolidata, Gea avrebbe il curioso vizio di rigare le macchine di chi fa un torto alle persone a cui vuole bene.\n\nNaturalmente non esistono prove.\n\nMa fossi in te parcheggerei lontano."}
+  ];
+
+  var form = document.getElementById('quiz');
+  var L = ['A','B','C'];
+  Q.forEach(function(q,i){
+    var fs = document.createElement('fieldset');
+    var lg = document.createElement('legend');
+    lg.textContent = 'Domanda ' + (i+1) + ' di 13';
+    fs.appendChild(lg);
+    var p = document.createElement('p');
+    p.className = 'q';
+    p.textContent = (i+1) + '. ' + q.t;
+    fs.appendChild(p);
+    q.o.forEach(function(txt,j){
+      var lab = document.createElement('label');
+      lab.className = 'opt';
+      var inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = 'q' + i; inp.value = L[j];
+      var b = document.createElement('b'); b.textContent = L[j] + '.';
+      var s = document.createElement('span'); s.textContent = txt;
+      lab.appendChild(inp); lab.appendChild(b); lab.appendChild(s);
+      fs.appendChild(lab);
+    });
+    if(q.n){
+      var n = document.createElement('p');
+      n.className = 'note'; n.textContent = q.n;
+      fs.appendChild(n);
+    }
+    form.appendChild(fs);
+  });
+
+  var btn = document.getElementById('go');
+  var hint = document.getElementById('hint');
+  var count = document.getElementById('count');
+  var fill = document.getElementById('fill');
+  var total = Q.length;
+
+  function update(){
+    var done = 0;
+    for(var i=0;i<total;i++){
+      if(form.querySelector('input[name="q'+i+'"]:checked')) done++;
+    }
+    count.textContent = 'Domande completate: ' + done + ' / ' + total;
+    fill.style.width = (done/total*100) + '%';
+    var ready = done === total;
+    btn.disabled = !ready;
+    hint.textContent = ready
+      ? 'Ottimo. La commissione è pronta a pronunciarsi.'
+      : 'Rispondi a tutte le ' + total + ' domande per attivare il pulsante (ne mancano ' + (total-done) + ').';
+  }
+  form.addEventListener('change', update);
+  update();
+
+  btn.addEventListener('click', function(){
+    if(btn.disabled) return;
+    btn.disabled = true;
+    var delib = document.getElementById('deliberating');
+    var res = document.getElementById('result');
+    delib.style.display = 'block';
+    delib.scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(function(){
+      delib.style.display = 'none';
+      document.querySelector('.progress').style.display = 'none';
+      res.style.display = 'block';
+      res.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 2800);
+  });
+})();
+</script>
+</body>
+</html>
